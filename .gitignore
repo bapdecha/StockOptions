@@ -5,3 +5,5 @@ ansible.cfg
 logs
 secrets
 .DS_Store
+*.xlsx
+*.csv
