@@ -1,0 +1,23 @@
+<html>
+    <body>
+        <h1>Récupérer depuis la base de donnée</h1>
+        <hr>
+        <form method="POST" action="/db">
+            {% for elt in names %}
+                <label for="elt">{{ elt }}</label><input type="radio" id="{{ elt }}" name="elt">
+            {% endfor %}
+            <input type="submit" value="recuperer">
+        </form>
+        {{ txt }}
+        <table>
+            <thead>
+                <tr><td>Prix de l'action</td><td>Achat Call</td><td>Porte Feuille après Call</td><td>Achat Put</td><td>Porte Feuille après Put</td></tr>
+            </thead>
+            <tbody>
+                {% for elt in values %}
+                    <tr><td>{{ elt.prix }} €</td><td>{{ elt.call }} €</td><td>{{ elt.pfc }}</td><td>{{ elt.put }} €</td><td>{{ elt.pfp }}</tr>
+                {% endfor %}
+            </tbody>
+            </table>
+    </body>
+</html>

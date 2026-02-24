@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel='stylesheet' href='/static/css.css'>
+</head>
+<body>
+<h1>Simulateur : Obligations</h1>
+<hr>
+<form method='post' action='/obli'>
+    <label for='zero'>Zero Coupon ? </label><input type='checkbox' id='zero' name='zero' onclick="isChecked()"><br>
+    <div id="form">
+        <label for='obli'>Prix de l'obligation (%)</label><input type='number' id='obli' name='obli' min='0' step='0.01'><br>
+        <label for='echeance'>Echéance (jj/mm/aaaa)</label><input type='date' id='echeance' name='echeance'><br>
+        <label for='coupon'>Coupon (%)</label><input type='number' id='coupon' name='coupon' min='0' step='0.01'><br>
+        <label for='nom'>Nominal</label><input type='number' id='nom' name='nom' min='0' step='0.01'><br>
+        <label for='nb'>Nombre d'obligations</label><input type='number' id='nb' name='nb'><br>
+        <label for='date'>Date du coupon (jj/mm/aaaa)</label><input type='date' id='date' name='date'><br>
+        <label for='present'>Date presente (jj/mm/aaaa)</label><input type='date' id='present' name='present'><br>
+        <input type='submit' value='envoyer'>
+    </div>
+</form>
+<hr>
+Resultats :
+Cours de l'obligation (%) : {{ cours }} %<br>
+Coupon : {{ coupon }} €<br>
+Coupon couru : {{ cc }} %<br>
+Capital cumulé à l'échéance : {{ cce }} €<br>
+ROI : {{ roi }} %<br>
+</body>
+<script>
+    function isChecked() {
+        const zero = document.getElementById('zero');
+        const form = document.getElementById('form');
+        if (!zero.checked) {
+            form.innerHTML = "";
+            form.innerHTML += "<label for='obli'>Prix de l'obligation</label><input type='number' id='obli' name='obli' min='0' step='0.01'><br> \
+            <label for='echeance'>Echéance (jj/mm/aaaa)</label><input type='date' id='echeance' name='echeance'><br> \
+            <label for='coupon'>Coupon</label><input type='number' id='coupon' name='coupon' min='0' step='0.01'><br> \
+            <label for='nom'>Nominal</label><input type='number' id='nom' name='nom'><br> \
+            <label for='nb'>Nombre d'obligations</label><input type='number' id='nb' name='nb' min='0' step='0.01><br> \
+            <label for='date'>Date du coupon (jj/mm/aaaa)</label><input type='date' id='date' name='date'><br> \
+            <label for='present'>Date presente (jj/mm/aaaa)</label><input type='date' id='present' name='present'><br> \
+            <input type='submit' value='envoyer'>";
+        }
+        else {
+            form.innerHTML = "";
+            form.innerHTML += "<label for='obli'>Prix de l'obligation</label><input type='number' id='obli' name='obli' min='0' step='0.01'><br> \
+            <label for='echeance'>Echéance (jj/mm/aaaa)</label><input type='date' id='echeance' name='echeance'><br> \
+            <label for='nom'>Nominal</label><input type='number' id='nom' name='nom' min='0' step='0.01><br> \
+            <label for='nb'>Nombre d'obligations</label><input type='number' id='nb' name='nb'><br> \
+            <label for='present'>Date presente (jj/mm/aaaa)</label><input type='date' id='present' name='present'><br> \
+            <input type='submit' value='envoyer'>";
+        }
+    }
+</script>
+</html>

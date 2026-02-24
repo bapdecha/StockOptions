@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="/static/css.css">
+</head>
+<body>
+<h1>Simulateur : Stratégie de trading et de hedging</h1>
+<hr>
+<div class="conteneur">
+<form method="post" action="/sous-jacent">
+<label for="sj">Sous-jacent : </label>
+<div class="div1">
+<input type="text" name="sj" id="sj" autocomplete="off" oninput="onEvent()">
+<ul id="prop">
+</ul>
+</div>
+<div class="div2">
+Type d'option : <br>
+<input type="radio" id="call" name="type" value="call"><label for="call"> Call</label>
+<input type="radio" id="put" name="type" value="put"><label for="put"> Put</label>
+<br>
+<input type="submit" value="Envoyer">
+</div>
+</form>
+</div>
+<script>
+function inside(l1, l2) {
+  let i = 0;
+  while (i < l1.length && l1[i] === l2[i]) {
+    i++;
+  }
+  return i !== 0 && i === l1.length;
+}
+let db = {
+  AB: "AB Science",
+  AC: "Accor SA",
+  DQ: "Aeroports de Paris",
+  AF: "Air France-KLM",
+  AI: "Air Liquide",
+  AIR: "Airbus",
+  ALD: "ALD",
+  ALO: "Alstom",
+  ATE: "Alten",
+  AMUN: "Amundi",
+  AKE: "Arkema SA",
+  ATO: "Atos",
+  CS: "Axa",
+  BNP: "BNP Paribas",
+  BOL: "Bollore",
+  EN: "Bouygues",
+  BVI: "Bureau Veritas",
+  CAP: "Capgemini",
+  CA: "Carrefour",
+  CO: "Casino Guichard Perrachon",
+  ALCLS: "Cellectis",
+  CLARI: "Clariane",
+  COFA: "Coface",
+  COV: "Covivio",
+  ACA: "Credit Agricole",
+  BN: "Danone",
+  DSY: "Dassault Systemes",
+  DBV: "DBV Technologies",
+  ELIOR: "Elior Group",
+  ELIS: "Elis",
+  ENGI: "ENGIE",
+  ALESK: "Esker",
+  EL: "EssilorLuxottica",
+  RF: "Eurazeo",
+  ERF: "EUrofins Scientific",
+  FDJ: "FDJ",
+  FRVIA: "Forvia",
+  GNFT: "GENFIT",
+  GTT: "GTT",
+  RMS: "Hermes International",
+  ICAD: "Icade",
+  NK: "Imerys",
+  IPS: "Ipsos",
+  KER: "KERING",
+  OR: "L'Oreal",
+  LR: "Legrand SA",
+  MC: "LVMH",
+  MCPHY: "McPhy Energy",
+  MMT: "Metropole Television",
+  ML: "Michelin",
+  NEOEN: "Neoen SA",
+  NXI: "Nexity",
+  ALCOX: "Nicox",
+  NOKIA: "Nokia",
+  ORA: "Orange",
+  ORP: "Orpea",
+  OVH: "OVH",
+  RI: "Pernod Ricard",
+  PUB: "Publicis",
+  RNO: "Renault",
+  RXL: "Rexel",
+  RUI: "Rubis",
+  SAF: "Safran",
+  SGO: "Saint Gobain",
+  SAN: "Sanofi",
+  SU: "Schneider",
+  SCR: "Scor",
+  GLE: "Societe Generale",
+  SW: "Sodexo SA",
+  SOI: "Soitec",
+  STLAP: "Stellantis",
+  STM: "STMicroelectronics",
+  TE: "Technip Energies",
+  TFI: "TF1",
+  HO: "Thales",
+  TT: "TotalEnergies",
+  UBI: "Ubisoft Entertainment",
+  URW: "Unibail-Rodamco-Westfield",
+  FR: "Valeo",
+  VK: "Vallourec",
+  VLA: "Valneva SE",
+  VIE: "Veolia Environnement",
+  VRLA: "Verallia",
+  DG: "Vinci",
+  VIV: "Vivendi",
+  WLN: "Worldline"
+};
+let sj = document.getElementById("sj");
+const li = document.getElementById("prop");
+function onEvent() {
+  let o = {};
+  const txt = sj.value.split('');
+  for (let key in db) {
+    const kList = key.split('');
+    const vList = db[key].split('');
+    if (inside(txt, kList) || inside(txt, vList))
+      o[key] = db[key];
+  }
+  li.innerHTML = "";
+  for (let key in o) {
+    li.innerHTML += "<li><span onclick='fill(this.innerText)'>" + o[key] + "</span></li>";
+  }
+}
+function fill(value) {
+  sj.value = value;
+  li.innerHTML = "";
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+- name: First play
+  hosts: http
+  vars_files:
+    - secrets/secret.yaml
+    - group_vars/servers.yaml
+  roles:
+    - geerlingguy.docker
+  tasks:
+    - name: copy files
+      ansible.builtin.copy:
+        src: src/
+        dest: /home/bapdecha/options/
+        mode: '0777'
+        owner: bapdecha
+        group: bapdecha
+    - name: copy Dockerfiles
+      ansible.builtin.copy:
+        src: Dockerfiles/
+        dest: /home/bapdecha/Dockerfiles/
+        mode: '0666'
+        owner: bapdecha
+        group: bapdecha
+    - name: create first image
+      community.docker.docker_image:
+        name: flask:{{ flask_version }}
+        build:
+          path: /home/bapdecha/
+          dockerfile: Dockerfiles/flask/Dockerfile
+        source: build
+    - name: create second image
+      community.docker.docker_image:
+        name: pg:{{ pg_version }}
+        build:
+          path: /home/bapdecha/
+          dockerfile: Dockerfiles/pg/Dockerfile
+        source: build
+    - name: create first container
+      community.docker.docker_container:
+        name: flask
+        image: flask:{{ flask_version }}
+        state: started
+        restart_policy: always
+        env:
+          DB: "{{ postgres }}"
+          USER: "{{ username }}"
+          PSWD: "{{ password }}"
+          HOST: "{{ host }}"
+          PORT: "{{ port }}"
+        ports:
+          - "80:8000"
+    - name: create second container
+      community.docker.docker_container:
+        name: pg
+        image: pg:{{ pg_version }}
+        state: started
+        restart_policy: always
+        ports:
+          - "5432:5432"

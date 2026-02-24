@@ -1,0 +1,27 @@
+.conteneur {
+  position: relative;
+  width: auto;
+  height: auto;
+}
+
+.div1, .div2 {
+  position: absolute;
+  width: auto;
+  height: auto;
+}
+
+.div1 {
+  top: 0px;
+  z-index: 1;
+  background-color: lightgrey;
+  margin-left: 100px;
+}
+
+.div2 {
+  top: 50px;
+  z-index: 0;
+}
+
+ul {
+  list-style-type: none;
+}
