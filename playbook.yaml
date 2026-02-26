@@ -9,29 +9,29 @@
     - name: copy files
       ansible.builtin.copy:
         src: src/
-        dest: /home/bapdecha/options/
+        dest: /home/ubuntu/options/
         mode: '0777'
-        owner: bapdecha
-        group: bapdecha
+        owner: ubuntu
+        group: ubuntu
     - name: copy Dockerfiles
       ansible.builtin.copy:
         src: Dockerfiles/
-        dest: /home/bapdecha/Dockerfiles/
+        dest: /home/ubuntu/Dockerfiles/
         mode: '0666'
-        owner: bapdecha
-        group: bapdecha
+        owner: ubuntu
+        group: ubuntu
     - name: create first image
       community.docker.docker_image:
         name: flask:{{ flask_version }}
         build:
-          path: /home/bapdecha/
+          path: /home/ubuntu/
           dockerfile: Dockerfiles/flask/Dockerfile
         source: build
     - name: create second image
       community.docker.docker_image:
         name: pg:{{ pg_version }}
         build:
-          path: /home/bapdecha/
+          path: /home/ubuntu/
           dockerfile: Dockerfiles/pg/Dockerfile
         source: build
     - name: create first container
