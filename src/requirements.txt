@@ -1,2 +1,2 @@
 flask==3.0.3
-psycopg2-binary==2.9.10
+pymongo==4.16.0

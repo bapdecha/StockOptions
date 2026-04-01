@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request
 from math import floor, exp, log, sqrt, pi
-from time import localtime
-import psycopg2
+import time
+from pymongo import MongoClient
 import os
 
 app = Flask(__name__)
@@ -19,25 +19,13 @@ def form():
 def simu():
 	return render_template("simu.html")
 
-def days(L):
-	M = [31,28,31,30,31,30,31,31,30,31,30,31]
-	d = 0
-	m = int(L[1])
-	for i in range(m-1):
-		d += M[i]
-	d += int(L[2])
-	return d
-
 def parse(L):
-	t = localtime()
-	d1 = 365 - days([t.tm_year, t.tm_mon, t.tm_mday])
-	d2 = days(L)
-	y = int(L[0])
-	if t.tm_year != y:
-		return d1 + d2 + (y - t.tm_year - 1) * 365
-	else:
-		d1 = 365 - d1
-		return max(0, d2 - d1)
+	dst = time.mktime((int(L[0]), int(L[1]), int(L[2]), 23, 59, 59, 0, 1, -1))
+	now = time.time()
+	diff = dst - now
+	if diff < 0:
+		return 1
+	return diff / 86400
 
 def norm(x):
 	return 1/sqrt(2*pi)*exp(-(x**2)/2)

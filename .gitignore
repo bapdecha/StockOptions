@@ -1,7 +1,7 @@
 .venv
 artifacts
 execution-envrionment.yml
-ansible.cfg
+*.cfg
 logs
 secrets
 .DS_Store
