@@ -27,13 +27,6 @@
           path: /home/ubuntu/
           dockerfile: Dockerfiles/flask/Dockerfile
         source: build
-    - name: create second image
-      community.docker.docker_image:
-        name: pg:{{ pg_version }}
-        build:
-          path: /home/ubuntu/
-          dockerfile: Dockerfiles/pg/Dockerfile
-        source: build
     - name: create first container
       community.docker.docker_container:
         name: flask
@@ -41,18 +34,7 @@
         state: started
         restart_policy: always
         env:
-          DB: "{{ postgres }}"
-          USER: "{{ username }}"
-          PSWD: "{{ password }}"
-          HOST: "{{ host }}"
-          PORT: "{{ port }}"
+          MONGO_URI: "{{ URL }}"
+          MONGO_DB: "{{ name }}"
         ports:
           - "80:8000"
-    - name: create second container
-      community.docker.docker_container:
-        name: pg
-        image: pg:{{ pg_version }}
-        state: started
-        restart_policy: always
-        ports:
-          - "5432:5432"

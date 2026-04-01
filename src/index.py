@@ -6,10 +6,9 @@ import os
 
 app = Flask(__name__)
 
-try:
-	c = psycopg2.connect(database=os.environ["DB"], user=os.environ["USER"], password=os.environ["PSWD"], host=os.environ["HOST"], port=os.environ["PORT"])
-except Exception as e:
-	print(e)
+def get_database():
+	client = MongoClient(os.environ["MONGO_URI"])
+	return client[os.environ["MONGO_DB"]]
 
 @app.get("/")
 def form():
@@ -73,18 +72,26 @@ def ans():
 			f.write(s)
 	f.close()
 	os.system("python3 plot.py")
+	message = ""
 	try:
 		if name_db != "":
-			cur = c.cursor()
-			cur.execute("CREATE TABLE IF NOT EXISTS names (id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY, name TEXT NOT NULL)")
-			cur.execute("INSERT INTO names (name) VALUES ('"+name_db+"')")
-			cur.execute("CREATE TABLE IF NOT EXISTS "+name_db+" (prixAction INT, call INT, walletCall INT, put INT, walletPut INT)")
-			for i in range(sup-inf+1):
-				cur.execute("INSERT INTO "+name_db+" (prixAction, call, walletCall, put, walletPut) VALUES \
-					("+str(values[i]['prix'])+","+str(values[i]['call'])+","+str(values[i]['pfc'])+","+str(values[i]['put'])+","+str(values[i]['pfp'])+")")
+			db = get_database()
+			if "names" not in db.list_collection_names():
+				db["names"].insert_one({
+					"name": name_db
+				})
+			if name_db in db.list_collection_names():
+				raise Exception("Collection already exists")
+			collection = db[name_db]
+			collection.insert_many([{
+				"prix": values[i]['prix'],
+				"call": values[i]['call'],
+				"pfc": values[i]['pfc'],
+				"put": values[i]['put'],
+				"pfp": values[i]['pfp']} for i in range(sup-inf+1)])
 	except Exception as e:
-		print(e)
-	return render_template("simu.html", values=values, exercice=exercice, action=action, prime=prime)
+		message = "Erreur : la collection " + name_db + " existe déjà"
+	return render_template("simu.html", values=values, exercice=exercice, action=action, prime=prime, message=message)
 
 @app.get("/opt")
 def opt():
@@ -122,17 +129,17 @@ def calc_obli():
 
 @app.get("/db")
 def get_db():
-	cur = c.cursor()
-	cur.execute("SELECT * FROM names")
-	li = cur.fetchall()
+	db = get_database()
+	names = db["names"].find()
+	li = [name["name"] for name in names]
 	return render_template("db.html", names=li)
 
 @app.post("/db")
 def post_db():
-	cur = c.cursor()
-	elt = request.form['elt']
-	cur.execute("SELECT * FROM "+elt)
-	li = cur.fetchall()
+	db = get_database()
+	collection = db[request.form['elt']]
+	values = collection.find()
+	li = [value for value in values]
 	return render_template("db.html", values=li)
 
 if __name__ == '__main__':
