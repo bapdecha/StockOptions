@@ -16,6 +16,14 @@
 Prix d'exercice : {{ exercice }}<br>
 Cours de l'action : {{ action }}<br>
 Prime : {{ prime }}<br>
+Delta Call : {% if greeks %}{{ greeks.delta_call }}{% else %}{% endif %}<br>
+Delta Put : {% if greeks %}{{ greeks.delta_put }}{% else %}{% endif %}<br>
+Gamma : {% if greeks %}{{ greeks.gamma }}{% else %}{% endif %}<br>
+Theta Call : {% if greeks %}{{ greeks.theta_call }}{% else %}{% endif %}<br>
+Theta Put : {% if greeks %}{{ greeks.theta_put }}{% else %}{% endif %}<br>
+Rho Call : {% if greeks %}{{ greeks.rho_call }}{% else %}{% endif %}<br>
+Rho Put : {% if greeks %}{{ greeks.rho_put }}{% else %}{% endif %}<br>
+Vega : {% if greeks %}{{ greeks.vega }}{% else %}{% endif %}<br>
 {{ message }}<br>
 <table>
 <thead>

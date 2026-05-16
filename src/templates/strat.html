@@ -1,0 +1,66 @@
+<html>
+<body>
+<h1>Simulateur : Stratégie de trading et de hedging (avec modèle Black-Scholes)</h1>
+<hr>
+<form method='post' action='/strat'>
+    <label for="type">Type de stratégie</label>
+    <select name="type" id="type" onchange="multiplyLine()">
+        <option value="call">Call</option>
+        <option value="put">Put</option>
+        <option value="straddle">Straddle</option>
+        <option value="strangle">Strangle</option>
+        <option value="butterfly">Butterfly</option>
+        <option value="iron-condor">Iron Condor</option>
+    </select><br>
+    <label for="sens">Sens</label>
+    <select name="sens" id="sens">
+        <option value="achat">Achat</option>
+        <option value="vente">Vente</option>
+    </select><br>
+    <div id="nb_options"></div>
+    <label for="sous-jacent">Sous-jacent</label>
+    <input type="number" id="sous-jacent" name="sous-jacent" min="0" step="0.01"><br>
+    <label for="terme">Date du terme (jj/mm/aaaa)</label>
+    <input type="date" id="terme" name="terme"><br>
+    <label for="taux">Taux sans risque (%)</label>
+    <input type="number" id="taux" name="taux" min="0" max="100" step="0.01"><br>
+    <label for="vol">Volatilité (%)</label>
+    <input type="number" id="vol" name="vol" min="0" max="100"><br>
+    <label for="taille">Taille du contrat</label>
+    <input type="number" id="taille" name="taille"><br>
+    <label for="nb">Nombre de contrats</label>
+    <input type="number" id="nb" name="nb"><br>
+    <label for='inf'>Borne inférieure (incluse)</label>
+    <input type='number' id='inf' name='inf'><br>
+    <label for='sup'>Borne supérieure (incluse)</label>
+    <input type='number' id='sup' name='sup'><br>
+    <input type="submit" value="envoyer">
+</form>
+<br>
+Prime : {{ prime }}<br>
+Delta Call : {{ delta_call }}<br>
+Delta Put : {{ delta_put }}<br>
+Gamma : {{ gamma }}<br>
+Theta Call : {{ theta_call }}<br>
+Theta Put : {{ theta_put }}<br>
+Rho Call : {{ rho_call }}<br>
+Rho Put : {{ rho_put }}<br>
+Vega : {{ vega }}<br>
+<img alt="valeur intrinsèque" src="/static/vi.png"><br>
+<script>
+    function multiplyLine() {
+        if (document.getElementById('type').value === 'straddle' || document.getElementById('type').value === 'call' || document.getElementById('type').value === 'put') {
+            document.getElementById("nb_options").innerHTML = "<label for='exercice'>Prix d'exercice 1</label><input type='number' id='exercice1' name='exercice' min='0'><br>";
+        } else if (document.getElementById('type').value === 'strangle') {
+            document.getElementById("nb_options").innerHTML = "<label for='exercice'>Prix d'exercice 1</label><input type='number' id='exercice1' name='exercice' min='0'><br><label for='exercice'>Prix d'exercice 2</label><input type='number' id='exercice2' name='exercice2' min='document.getElementById('exercice1').value'><br>";
+        } else if (document.getElementById('type').value === 'butterfly') {
+            document.getElementById("nb_options").innerHTML = "<label for='exercice'>Prix d'exercice 1</label><input type='number' id='exercice1' name='exercice' min='0'><br><label for='exercice'>Prix d'exercice 2</label><input type='number' id='exercice2' name='exercice2' min='document.getElementById('exercice1').value'><br><label for='exercice'>Prix d'exercice 3</label><input type='number' id='exercice3' name='exercice3' min='document.getElementById('exercice2').value'><br>";
+        } else if (document.getElementById('type').value === 'iron-condor') {
+            document.getElementById("nb_options").innerHTML = "<label for='exercice'>Prix d'exercice 1</label><input type='number' id='exercice1' name='exercice' min='0'><br><label for='exercice'>Prix d'exercice 2</label><input type='number' id='exercice2' name='exercice2' min='document.getElementById('exercice1').value'><br><label for='exercice'>Prix d'exercice 3</label><input type='number' id='exercice3' name='exercice3' min='document.getElementById('exercice2').value'><br><label for='exercice'>Prix d'exercice 4</label><input type='number' id='exercice4' name='exercice4' min='document.getElementById('exercice3').value'><br>";
+        } else {
+            document.getElementById("nb_options").innerHTML = "";
+        }
+    }
+</script>
+</body>
+</html>
